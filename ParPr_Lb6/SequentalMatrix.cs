@@ -13,6 +13,11 @@ namespace ParPr_Lb6
 
         public SequentalMatrix(int n)
         {
+            if(n < 0)
+            {
+                throw new ArgumentException("n must be higher than zero");
+            }
+
             _values = new T[n, n];
             _length = n;
         }
