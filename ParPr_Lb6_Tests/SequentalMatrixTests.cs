@@ -1,9 +1,9 @@
 namespace ParPr_Lb6_Tests
 {
-    //[TestClass]
+    //[SequentalMatrix]
     public class UnitTest1
     {
-        //[TestMethod]
+        //[SequentalMatrix]
         public void TestMethod1()
         {
         }
