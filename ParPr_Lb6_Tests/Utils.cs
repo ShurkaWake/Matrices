@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 
 namespace ParPr_Lb6_Tests
 {
@@ -27,9 +22,9 @@ namespace ParPr_Lb6_Tests
             int length = first.GetLength(0);
             int[,] res = new int[length, length];
 
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
-                for(int j = 0; j < length; j++)
+                for (int j = 0; j < length; j++)
                 {
                     res[i, j] = first[i, j] + second[i, j];
                 }

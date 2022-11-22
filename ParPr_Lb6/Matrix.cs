@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace ParPr_Lb6
 {
@@ -14,7 +9,7 @@ namespace ParPr_Lb6
 
         public Matrix(int n)
         {
-            if(n < 0)
+            if (n < 0)
             {
                 throw new ArgumentException("n must be higher than zero");
             }
@@ -25,7 +20,7 @@ namespace ParPr_Lb6
 
         public Matrix(T[,] values)
         {
-            if(values.GetLength(0) != values.GetLength(1))
+            if (values.GetLength(0) != values.GetLength(1))
             {
                 throw new ArgumentException("Matrix must have same dimensions");
             }
@@ -53,15 +48,15 @@ namespace ParPr_Lb6
 
         public Matrix<T> SequentalAdd(Matrix<T> matrix)
         {
-            if(Length != matrix.Length)
+            if (Length != matrix.Length)
             {
                 throw new ArgumentException("Matrices must be the same length");
             }
 
             Matrix<T> result = new Matrix<T>(this.Length);
-            for(int i = 0; i < Length; i++)
+            for (int i = 0; i < Length; i++)
             {
-                for(int j = 0; j < Length; j++)
+                for (int j = 0; j < Length; j++)
                 {
                     result[i, j] = this[i, j] + matrix[i, j];
                 }
@@ -82,7 +77,7 @@ namespace ParPr_Lb6
 
         private void ThrowExceptionIfNotInBounds(int x, int y)
         {
-            if(!IsInBounds(x, y))
+            if (!IsInBounds(x, y))
             {
                 throw new IndexOutOfRangeException("Invalid indeces");
             }

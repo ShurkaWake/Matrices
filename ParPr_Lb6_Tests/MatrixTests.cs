@@ -13,20 +13,20 @@ namespace ParPr_Lb6_Tests
         }
 
         [TestMethod]
-        public void Constructor_WhenLengthAreCorrect_ShouldCreateCorrectInstance() 
+        public void Constructor_WhenLengthAreCorrect_ShouldCreateCorrectInstance()
         {
             const int length = 10;
             var sm = new Matrix<int>(length);
             int actualLengthX = 0;
 
-            for(int i = 0; i < sm.Length; i++)
+            for (int i = 0; i < sm.Length; i++)
             {
                 int actualLengthY = 0;
-                for(int j = 0; j < sm.Length; j++)
+                for (int j = 0; j < sm.Length; j++)
                 {
                     actualLengthY++;
                 }
-                if(actualLengthY != length)
+                if (actualLengthY != length)
                 {
                     Assert.Fail("Matrix not the same width");
                 }
@@ -119,9 +119,9 @@ namespace ParPr_Lb6_Tests
             Assert.AreEqual(sm2.Length, actual.Length);
             Assert.AreEqual(actual.Length, length);
 
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
-                for(int j = 0; j < length; j++)
+                for (int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(expected[i, j], actual[i, j]);
                 }
