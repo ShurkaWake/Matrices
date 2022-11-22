@@ -56,15 +56,55 @@ namespace ParPr_Lb6
             Matrix<T> result = new Matrix<T>(this.Length);
             for (int i = 0; i < Length; i++)
             {
-                for (int j = 0; j < Length; j++)
+                for (int j = 0; j < Length; j++) 
                 {
                     result[i, j] = this[i, j] + matrix[i, j];
                 }
             }
+            return result;
+        }
+
+        public Matrix<T> ParallelAdd(Matrix<T> matrix)
+        {
+            if (Length != matrix.Length)
+            {
+                throw new ArgumentException("Matrices must be the same length");
+            }
+
+            Matrix<T> result = new Matrix<T>(Length);
+            Parallel.For(0, Length, (i) =>
+            {
+                for (int j = 0; j < Length; j++)
+                {
+                    result[i, j] = this[i, j] + matrix[i, j];
+                }
+            });
 
             return result;
         }
 
+
+        public Matrix<T> ParallelAdd(Matrix<T> matrix, int threads)
+        {
+            if (Length != matrix.Length)
+            {
+                throw new ArgumentException("Matrices must be the same length");
+            }
+
+            Matrix<T> result = new Matrix<T>(Length);
+            Parallel.For(0, threads, (threadId) =>
+            {
+                for(int i = threadId; i < Length; i += threads)
+                {
+                    for(int j = 0; j < Length; j++)
+                    {
+                        result[i, j] = this[i, j] + matrix[i, j];
+                    }
+                }
+            });
+
+            return result;
+        }
         private bool IsInBounds(int index)
         {
             return index >= 0 && index < _length;
