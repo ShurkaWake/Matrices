@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ParPr_Lb6
 {
-    public class SequentalMatrix<T>
+    public class Matrix<T> where T : INumber<T>
     {
         T[,] _values;
         readonly int _length;
 
-        public SequentalMatrix(int n)
+        public Matrix(int n)
         {
             if(n < 0)
             {
@@ -22,7 +23,7 @@ namespace ParPr_Lb6
             _length = n;
         }
 
-        public SequentalMatrix(T[,] values)
+        public Matrix(T[,] values)
         {
             if(values.GetLength(0) != values.GetLength(1))
             {
@@ -48,6 +49,25 @@ namespace ParPr_Lb6
                 ThrowExceptionIfNotInBounds(x, y);
                 _values[x, y] = value;
             }
+        }
+
+        public Matrix<T> SequentalAdd(Matrix<T> matrix)
+        {
+            if(Length != matrix.Length)
+            {
+                throw new ArgumentException("Matrices must be the same length");
+            }
+
+            Matrix<T> result = new Matrix<T>(this.Length);
+            for(int i = 0; i < Length; i++)
+            {
+                for(int j = 0; j < Length; j++)
+                {
+                    result[i, j] = this[i, j] + matrix[i, j];
+                }
+            }
+
+            return result;
         }
 
         private bool IsInBounds(int index)

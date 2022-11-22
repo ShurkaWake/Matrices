@@ -9,14 +9,14 @@ namespace ParPr_Lb6_Tests
         [TestMethod]
         public void Constructor_WhenLengthLessThanZero_ShouldThrowArgumentException()
         {
-            Assert.ThrowsException<ArgumentException>(() => new SequentalMatrix<int>(-10));
+            Assert.ThrowsException<ArgumentException>(() => new Matrix<int>(-10));
         }
 
         [TestMethod]
         public void Constructor_WhenLengthAreCorrect_ShouldCreateCorrectInstance() 
         {
             const int length = 10;
-            var sm = new SequentalMatrix<int>(length);
+            var sm = new Matrix<int>(length);
             int actualLengthX = 0;
 
             for(int i = 0; i < sm.Length; i++)
@@ -40,9 +40,9 @@ namespace ParPr_Lb6_Tests
         public void Constructor_WhenParametersAreCorrect_ShouldCreateCorrectInstance()
         {
             const int length = 10;
-            int[,] m = GetMatrix(length);
+            int[,] m = Utils.GetMatrix(length);
 
-            var sm = new SequentalMatrix<int>(m);
+            var sm = new Matrix<int>(m);
             Assert.AreEqual(sm.Length, length);
 
             for (int i = 0; i < sm.Length; i++)
@@ -60,16 +60,16 @@ namespace ParPr_Lb6_Tests
             int[,] m1 = new int[4, 5];
             int[,] m2 = new int[5, 4];
 
-            Assert.ThrowsException<ArgumentException>(() => { new SequentalMatrix<int>(m1); });
-            Assert.ThrowsException<ArgumentException>(() => { new SequentalMatrix<int>(m2); });
+            Assert.ThrowsException<ArgumentException>(() => { new Matrix<int>(m1); });
+            Assert.ThrowsException<ArgumentException>(() => { new Matrix<int>(m2); });
         }
 
         [TestMethod]
         public void Indexator_WhenOutOfBounds_ShouldThrowIndexOutOfRangeException()
         {
             const int length = 10;
-            int[,] m = GetMatrix(length);
-            var sm = new SequentalMatrix<int>(m);
+            int[,] m = Utils.GetMatrix(length);
+            var sm = new Matrix<int>(m);
 
             Assert.ThrowsException<IndexOutOfRangeException>(() => sm[-1, 0]);
             Assert.ThrowsException<IndexOutOfRangeException>(() => sm[-1, -1]);
@@ -83,25 +83,49 @@ namespace ParPr_Lb6_Tests
         public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstanceOfT()
         {
             const int length = 10;
-            int[,] m = GetMatrix(length);
-            var sm = new SequentalMatrix<int>(m);
+            int[,] m = Utils.GetMatrix(length);
+            var sm = new Matrix<int>(m);
             int x = RandomNumberGenerator.GetInt32(0, length);
             int y = RandomNumberGenerator.GetInt32(0, length);
 
             Assert.AreEqual(m[x, y], sm[x, y]);
         }
 
-        private int[,] GetMatrix(int length)
+        [TestMethod]
+        public void SequentalAdd_WhenNotSameMatrixLength_ThrowsArgumentException()
         {
-            int[,] m = new int[length, length];
-            for (int i = 0; i < length; i++)
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length - 1);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.SequentalAdd(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.SequentalAdd(sm1));
+        }
+
+        [TestMethod]
+        public void SequentalAdd_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length);
+            int[,] expected = Utils.Add(m1, m2);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+            var actual = sm1.SequentalAdd(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for(int i = 0; i < length; i++)
             {
-                for (int j = 0; j < length; j++)
+                for(int j = 0; j < length; j++)
                 {
-                    m[i, j] = RandomNumberGenerator.GetInt32(0, 10);
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
                 }
             }
-            return m;
         }
     }
 }
