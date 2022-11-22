@@ -40,14 +40,7 @@ namespace ParPr_Lb6_Tests
         public void Constructor_WhenParametersAreCorrect_ShouldCreateCorrectInstance()
         {
             const int length = 10;
-            int[,] m = new int[length, length];
-            for(int i = 0; i < length; i++)
-            {
-                for(int j = 0; j < length; j++)
-                {
-                    m[i, j] = RandomNumberGenerator.GetInt32(0, 10);
-                }
-            }
+            int[,] m = GetMatrix(length);
 
             var sm = new SequentalMatrix<int>(m);
             Assert.AreEqual(sm.Length, length);
@@ -69,6 +62,46 @@ namespace ParPr_Lb6_Tests
 
             Assert.ThrowsException<ArgumentException>(() => { new SequentalMatrix<int>(m1); });
             Assert.ThrowsException<ArgumentException>(() => { new SequentalMatrix<int>(m2); });
+        }
+
+        [TestMethod]
+        public void Indexator_WhenOutOfBounds_ShouldThrowIndexOutOfRangeException()
+        {
+            const int length = 10;
+            int[,] m = GetMatrix(length);
+            var sm = new SequentalMatrix<int>(m);
+
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[-1, 0]);
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[-1, -1]);
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[0, -1]);
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[length + length, 0]);
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[length + length, length + length]);
+            Assert.ThrowsException<IndexOutOfRangeException>(() => sm[0, length + length]);
+        }
+
+        [TestMethod]
+        public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstanceOfT()
+        {
+            const int length = 10;
+            int[,] m = GetMatrix(length);
+            var sm = new SequentalMatrix<int>(m);
+            int x = RandomNumberGenerator.GetInt32(0, length);
+            int y = RandomNumberGenerator.GetInt32(0, length);
+
+            Assert.AreEqual(m[x, y], sm[x, y]);
+        }
+
+        private int[,] GetMatrix(int length)
+        {
+            int[,] m = new int[length, length];
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    m[i, j] = RandomNumberGenerator.GetInt32(0, 10);
+                }
+            }
+            return m;
         }
     }
 }
