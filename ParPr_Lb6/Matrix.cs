@@ -120,7 +120,8 @@ namespace ParPr_Lb6
             ThrowExceptionIfNotEqualLength(matrix);
 
             Matrix<T> result = new Matrix<T>(Length);
-            Parallel.For(0, Length, (i) => {
+            Parallel.For(0, Length, (i) =>
+            {
                 for (int j = 0; j < Length; j++)
                 {
                     for (int k = 0; k < Length; k++)
@@ -138,7 +139,8 @@ namespace ParPr_Lb6
             ThrowExceptionIfNotEqualLength(matrix);
 
             Matrix<T> result = new Matrix<T>(Length);
-            Parallel.For(0, threads, (threadId) => {
+            Parallel.For(0, threads, (threadId) =>
+            {
                 for (int i = threadId; i < Length; i += threads)
                 {
                     for (int j = 0; j < Length; j++)
