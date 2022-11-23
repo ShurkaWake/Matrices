@@ -29,14 +29,27 @@ namespace ParPr_Lb6
             switch (format)
             {
                 case TimeFormat.Miliseconds:
-                    return ticks / TimeSpan.TicksPerMillisecond;
+                    return ticks / (double) TimeSpan.TicksPerMillisecond;
                 case TimeFormat.Seconds:
-                    return ticks / TimeSpan.TicksPerSecond;
+                    return ticks / (double) TimeSpan.TicksPerSecond;
                 case TimeFormat.Ticks:
                     return ticks;
                 default:
-                    return ticks;
+                    return ticks / (double) TimeSpan.TicksPerMicrosecond;
             }
+        }
+
+        internal static bool[,] GetBoolMatrix(int length)
+        {
+            bool[,] m = new bool[length, length];
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    m[i, j] = (System.Diagnostics.Stopwatch.GetTimestamp() & 1) == 1;
+                }
+            }
+            return m;
         }
 
         internal static void NumberMatrixAddTest(int length, int threads)
@@ -59,7 +72,26 @@ namespace ParPr_Lb6
             Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} ms");
             Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} ms");
             Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} ms");
-            Console.WriteLine(resSeq.Length);
+        }
+
+        internal static void BoolMatrixAddTest(int length, int threads)
+        {
+            var sm1 = new BitMatrix(GetBoolMatrix(length));
+            var sm2 = new BitMatrix(GetBoolMatrix(length));
+
+            BitMatrix resSeq = new BitMatrix(1);
+            BitMatrix resPar = new BitMatrix(1);
+
+            double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+                () => resSeq = sm1.SequentalAdd(sm2));
+            double elapsedPar = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+                () => resPar = sm1.ParallelAdd(sm2));
+            double elapsedParFixed = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+                () => resPar = sm1.ParallelAdd(sm2, threads));
+
+            Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} mcs");
+            Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} mcs");
+            Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} mcs");
         }
 
         internal static void NumberMatrixMultiplyTest(int length, int threads)
@@ -82,7 +114,6 @@ namespace ParPr_Lb6
             Console.WriteLine($"Sequental multiply [length = {length}] execution time: {elapsedSeq:F4} ms");
             Console.WriteLine($"Parallel multiply [length = {length}] execution time: {elapsedPar:F4} ms");
             Console.WriteLine($"Parallel [threads = {threads}] multiply [length = {length}] execution time: {elapsedParFixed:F4} ms");
-            Console.WriteLine(resSeq.Length);
         }
     }
 
@@ -90,6 +121,7 @@ namespace ParPr_Lb6
     {
         Miliseconds,
         Ticks,
-        Seconds
+        Seconds,
+        Microseconds
     }
 }

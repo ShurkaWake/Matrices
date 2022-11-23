@@ -72,9 +72,30 @@ namespace ParPr_Lb6
 
         public int Length => _length;
 
+        public BitMatrix SequentalAdd(BitMatrix matrix)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            BitMatrix result = new BitMatrix(Length);
+            for (int i = 0; i < Length; i++)
+            {
+                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
+            }
+            return result;
+        }
+
         public BitMatrix ParallelAdd(BitMatrix matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            BitMatrix result = new BitMatrix(Length);
+            Parallel.For(0, Length, (i) =>
+            {
+                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
+            });
+            return result;
         }
 
         public BitMatrix ParallelAdd(BitMatrix matrix, int threads)
@@ -93,38 +114,17 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public BitMatrix ParallelMultiply(BitMatrix matrix)
-        {
-            ThrowExceptionIfNotEqualLength(matrix);
-
-            BitMatrix result = new BitMatrix(Length);
-            Parallel.For(0, Length, (i) =>
-            {
-                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-            });
-            return result;
-        }
-
-        public BitMatrix ParallelMultiply(BitMatrix matrix, int threads)
+        public BitMatrix SequentalMultiply(BitMatrix matrix)
         {
             throw new NotImplementedException();
         }
 
-        public BitMatrix SequentalAdd(BitMatrix matrix)
+        public BitMatrix ParallelMultiply(BitMatrix matrix)
         {
-            ThrowExceptionIfNotEqualLength(matrix);
-
-            BitMatrix result = new BitMatrix(Length);
-            for(int i = 0; i < Length; i++)
-            {
-                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-            }
-            return result;
+            throw new NotImplementedException();
         }
 
-        public BitMatrix SequentalMultiply(BitMatrix matrix)
+        public BitMatrix ParallelMultiply(BitMatrix matrix, int threads)
         {
             throw new NotImplementedException();
         }
