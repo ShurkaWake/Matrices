@@ -115,6 +115,24 @@ namespace ParPr_Lb6
             return result;
         }
 
+        public Matrix<T> ParallelMultiply(Matrix<T> matrix)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            Matrix<T> result = new Matrix<T>(Length);
+            Parallel.For(0, Length, (i) => {
+                for (int j = 0; j < Length; j++)
+                {
+                    for (int k = 0; k < Length; k++)
+                    {
+                        result[i, j] += this[i, k] * matrix[k, j];
+                    }
+                }
+            });
+
+            return result;
+        }
+
         private bool IsInBounds(int index)
         {
             return index >= 0 && index < _length;
