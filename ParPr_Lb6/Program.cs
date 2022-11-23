@@ -1,3 +1,3 @@
 ﻿using ParPr_Lb6;
 
-Utils.NumberMatrixAddTest();
+Utils.NumberMatrixMultiplyTest(1024, 8);
