@@ -201,5 +201,42 @@ namespace ParPr_Lb6_Tests
                 }
             }
         }
+
+        [TestMethod]
+        public void SequentalMultiply_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length - 1);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.SequentalMultiply(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.SequentalMultiply(sm1));
+        }
+
+        [TestMethod]
+        public void SequentalMultiply_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length);
+            int[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+            var actual = sm1.SequentalMultiply(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
     }
 }

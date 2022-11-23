@@ -97,7 +97,7 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public Matrix<T> SequentalMultipy(Matrix<T> matrix)
+        public Matrix<T> SequentalMultiply(Matrix<T> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -108,7 +108,7 @@ namespace ParPr_Lb6
                 {
                     for (int k = 0; k < Length; k++)
                     {
-                        result[i, j] += this[i, k] + matrix[k, j];
+                        result[i, j] += this[i, k] * matrix[k, j];
                     }
                 }
             }

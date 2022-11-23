@@ -11,7 +11,7 @@ namespace ParPr_Lb6_Tests
             {
                 for (int j = 0; j < length; j++)
                 {
-                    m[i, j] = RandomNumberGenerator.GetInt32(0, 10);
+                    m[i, j] = RandomNumberGenerator.GetInt32(0, 1024);
                 }
             }
             return m;
@@ -27,6 +27,25 @@ namespace ParPr_Lb6_Tests
                 for (int j = 0; j < length; j++)
                 {
                     res[i, j] = first[i, j] + second[i, j];
+                }
+            }
+
+            return res;
+        }
+
+        internal static int[,] Multiply(int[,] first, int[,] second)
+        {
+            int length = first.GetLength(0);
+            int[,] res = new int[length, length];
+
+            for (int i = 0; i < length; i++)
+            {
+                for(int j = 0; j < length; j++)
+                {
+                    for(int k = 0; k < length; k++)
+                    {
+                        res[i, j] += first[i, k] * second[k, j];
+                    }
                 }
             }
 
