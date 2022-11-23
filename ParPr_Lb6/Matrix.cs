@@ -48,15 +48,12 @@ namespace ParPr_Lb6
 
         public Matrix<T> SequentalAdd(Matrix<T> matrix)
         {
-            if (Length != matrix.Length)
-            {
-                throw new ArgumentException("Matrices must be the same length");
-            }
+            ThrowExceptionIfNotEqualLength(matrix);
 
             Matrix<T> result = new Matrix<T>(this.Length);
             for (int i = 0; i < Length; i++)
             {
-                for (int j = 0; j < Length; j++) 
+                for (int j = 0; j < Length; j++)
                 {
                     result[i, j] = this[i, j] + matrix[i, j];
                 }
@@ -66,10 +63,7 @@ namespace ParPr_Lb6
 
         public Matrix<T> ParallelAdd(Matrix<T> matrix)
         {
-            if (Length != matrix.Length)
-            {
-                throw new ArgumentException("Matrices must be the same length");
-            }
+            ThrowExceptionIfNotEqualLength(matrix);
 
             Matrix<T> result = new Matrix<T>(Length);
             Parallel.For(0, Length, (i) =>
@@ -86,17 +80,14 @@ namespace ParPr_Lb6
 
         public Matrix<T> ParallelAdd(Matrix<T> matrix, int threads)
         {
-            if (Length != matrix.Length)
-            {
-                throw new ArgumentException("Matrices must be the same length");
-            }
+            ThrowExceptionIfNotEqualLength(matrix);
 
             Matrix<T> result = new Matrix<T>(Length);
             Parallel.For(0, threads, (threadId) =>
             {
-                for(int i = threadId; i < Length; i += threads)
+                for (int i = threadId; i < Length; i += threads)
                 {
-                    for(int j = 0; j < Length; j++)
+                    for (int j = 0; j < Length; j++)
                     {
                         result[i, j] = this[i, j] + matrix[i, j];
                     }
@@ -105,6 +96,25 @@ namespace ParPr_Lb6
 
             return result;
         }
+
+        public Matrix<T> SequentalMultipy(Matrix<T> matrix)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            Matrix<T> result = new Matrix<T>(Length);
+            for (int i = 0; i < Length; i++)
+            {
+                for (int j = 0; j < Length; j++)
+                {
+                    for (int k = 0; k < Length; k++)
+                    {
+                        result[i, j] += this[i, k] + matrix[k, j];
+                    }
+                }
+            }
+            return result;
+        }
+
         private bool IsInBounds(int index)
         {
             return index >= 0 && index < _length;
@@ -120,6 +130,14 @@ namespace ParPr_Lb6
             if (!IsInBounds(x, y))
             {
                 throw new IndexOutOfRangeException("Invalid indeces");
+            }
+        }
+
+        private void ThrowExceptionIfNotEqualLength(Matrix<T> y)
+        {
+            if (Length != y.Length)
+            {
+                throw new ArgumentException("Matrices must be the same length");
             }
         }
     }
