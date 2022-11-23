@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace ParPr_Lb6
 {
-    public class BitMatrix : IMatrix<bool>
+    public class BitMatrix
     {
-        private readonly BitArray[] _values;
+        private readonly BitArray[] _valuesVertical;
+        private readonly BitArray[] _valuesHorizontal;
         private readonly int _length;
 
         public BitMatrix(int n)
@@ -19,10 +20,12 @@ namespace ParPr_Lb6
                 throw new ArgumentException("n must be higher than zero");
             }
 
-            _values = new BitArray[n];
-            for(int i = 0; i < n; i++)
+            _valuesVertical = new BitArray[n];
+            _valuesHorizontal = new BitArray[n];
+            for (int i = 0; i < n; i++)
             {
-                _values[i] = new BitArray(n);
+                _valuesVertical[i] = new BitArray(n);
+                _valuesHorizontal[i] = new BitArray(n);
             }
             _length = n;
         }
@@ -35,13 +38,18 @@ namespace ParPr_Lb6
             }
 
             int n = values.GetLength(0); 
-            _values = new BitArray[n];
+            _valuesHorizontal = new BitArray[n];
+            _valuesVertical = new BitArray[n];
+
             for (int i = 0; i < n; i++)
             {
-                _values[i] = new BitArray(n);
+                _valuesHorizontal[i] = new BitArray(n);
+                _valuesVertical[i] = new BitArray(n);
+
                 for (int j = 0; j < n; j++)
                 {
-                    _values[i][j] = values[i, j];
+                    _valuesHorizontal[i][j] = values[i, j];
+                    _valuesVertical[i][j] = values[j, i];
                 }
             }
             _length = n;
@@ -52,44 +60,51 @@ namespace ParPr_Lb6
             get
             {
                 ThrowExceptionIfNotInBounds(x, y);
-                return _values[x][y];
+                return _valuesVertical[x][y];
             }
             set
             {
                 ThrowExceptionIfNotInBounds(x, y);
-                _values[x][y] = value;
+                _valuesVertical[x][y] = value;
+                _valuesHorizontal[y][x] = value;
             } 
         }
 
-        private BitArray[] Values => _values;
         public int Length => _length;
 
-        public IMatrix<bool> ParallelAdd(IMatrix<bool> matrix)
+        public BitMatrix ParallelAdd(BitMatrix matrix)
         {
             throw new NotImplementedException();
         }
 
-        public IMatrix<bool> ParallelAdd(IMatrix<bool> matrix, int threads)
+        public BitMatrix ParallelAdd(BitMatrix matrix, int threads)
         {
             throw new NotImplementedException();
         }
 
-        public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix)
+        public BitMatrix ParallelMultiply(BitMatrix matrix)
         {
             throw new NotImplementedException();
         }
 
-        public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix, int threads)
+        public BitMatrix ParallelMultiply(BitMatrix matrix, int threads)
         {
             throw new NotImplementedException();
         }
 
-        public IMatrix<bool> SequentalAdd(IMatrix<bool> matrix)
+        public BitMatrix SequentalAdd(BitMatrix matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            BitMatrix result = new BitMatrix(Length);
+            for(int i = 0; i < Length; i++)
+            {
+                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+            }
+            return result;
         }
 
-        public IMatrix<bool> SequentalMultiply(IMatrix<bool> matrix)
+        public BitMatrix SequentalMultiply(BitMatrix matrix)
         {
             throw new NotImplementedException();
         }
@@ -112,7 +127,7 @@ namespace ParPr_Lb6
             }
         }
 
-        private void ThrowExceptionIfNotEqualLength(IMatrix<bool> y)
+        private void ThrowExceptionIfNotEqualLength(BitMatrix y)
         {
             if (Length != y.Length)
             {

@@ -85,7 +85,7 @@ namespace ParPr_Lb6_Tests
         }
 
         [TestMethod]
-        public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstanceOfT()
+        public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstance()
         {
             const int length = 10;
             bool[,] m = Utils.GetBoolMatrix(length);
@@ -98,6 +98,17 @@ namespace ParPr_Lb6_Tests
                     Assert.AreEqual(m[i, j], sm[i, j]);
                 }
             }
+        }
+
+        [TestMethod]
+        public void Indexator_WhenCorrectParameters_ShouldCorrectChangeValue()
+        {
+            const int length = 10;
+            bool[,] m = Utils.GetBoolMatrix(length);
+            var sm = new BitMatrix(m);
+
+            sm[length / 2, length / 2] = !sm[length / 2, length / 2];
+            Assert.AreNotEqual(m[length / 2, length / 2], sm[length / 2, length / 2]);
         }
     }
 }
