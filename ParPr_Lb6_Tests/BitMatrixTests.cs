@@ -60,6 +60,43 @@ namespace ParPr_Lb6_Tests
         }
 
         [TestMethod]
+        public void SequentalAdd_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.SequentalAdd(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.SequentalAdd(sm1));
+        }
+
+        [TestMethod]
+        public void SequentalAdd_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Add(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.SequentalAdd(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
         public void Constructor_WhenParametersNotSquare_ShouldThrowArgumentAxception()
         {
             bool[,] m1 = new bool[4, 5];

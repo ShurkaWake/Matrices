@@ -60,7 +60,7 @@ namespace ParPr_Lb6
             get
             {
                 ThrowExceptionIfNotInBounds(x, y);
-                return _valuesVertical[x][y];
+                return _valuesHorizontal[x][y];
             }
             set
             {
@@ -100,6 +100,7 @@ namespace ParPr_Lb6
             for(int i = 0; i < Length; i++)
             {
                 result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
             }
             return result;
         }
