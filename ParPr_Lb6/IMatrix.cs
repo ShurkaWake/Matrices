@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ParPr_Lb6
+﻿namespace ParPr_Lb6
 {
     public interface IMatrix<T>
     {
-        public abstract int Length 
-        { 
-            get; 
+        public abstract int Length
+        {
+            get;
         }
 
         public abstract T this[int x, int y]
         {
-            get; 
+            get;
             set;
         }
 

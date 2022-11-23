@@ -4,7 +4,7 @@ namespace ParPr_Lb6
 {
     public class Matrix<T> : IMatrix<T> where T : INumber<T>
     {
-        T[,] _values;
+        readonly T[,] _values;
         readonly int _length;
 
         public Matrix(int n)
