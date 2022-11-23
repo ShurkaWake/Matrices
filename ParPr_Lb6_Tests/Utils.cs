@@ -46,6 +46,22 @@ namespace ParPr_Lb6_Tests
             return res;
         }
 
+        internal static bool[,] Add(bool[,] first, bool[,] second)
+        {
+            int length = first.GetLength(0);
+            bool[,] res = new bool[length, length];
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    res[i, j] = first[i, j] | second[i, j];
+                }
+            }
+
+            return res;
+        }
+
         internal static int[,] Multiply(int[,] first, int[,] second)
         {
             int length = first.GetLength(0);
@@ -53,9 +69,9 @@ namespace ParPr_Lb6_Tests
 
             for (int i = 0; i < length; i++)
             {
-                for(int j = 0; j < length; j++)
+                for (int j = 0; j < length; j++)
                 {
-                    for(int k = 0; k < length; k++)
+                    for (int k = 0; k < length; k++)
                     {
                         res[i, j] += first[i, k] * second[k, j];
                     }

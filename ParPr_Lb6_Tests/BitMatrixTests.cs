@@ -85,7 +85,7 @@ namespace ParPr_Lb6_Tests
         }
 
         [TestMethod]
-        public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstanceOfT()
+        public void Indexator_WhenCorrectParameters_ShouldGiveCorrectInstance()
         {
             const int length = 10;
             bool[,] m = Utils.GetBoolMatrix(length);
@@ -96,6 +96,130 @@ namespace ParPr_Lb6_Tests
                 for(int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(m[i, j], sm[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Indexator_WhenCorrectParameters_ShouldCorrectChangeValue()
+        {
+            const int length = 10;
+            bool[,] m = Utils.GetBoolMatrix(length);
+            var sm = new BitMatrix(m);
+
+            sm[length / 2, length / 2] = !sm[length / 2, length / 2];
+            Assert.AreNotEqual(m[length / 2, length / 2], sm[length / 2, length / 2]);
+        }
+
+
+
+        [TestMethod]
+        public void SequentalAdd_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.SequentalAdd(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.SequentalAdd(sm1));
+        }
+
+        [TestMethod]
+        public void SequentalAdd_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Add(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.SequentalAdd(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ParallelAdd_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length - 1);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelAdd(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelAdd(sm1));
+        }
+
+        [TestMethod]
+        public void ParallelAdd_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            int[,] m1 = Utils.GetMatrix(length);
+            int[,] m2 = Utils.GetMatrix(length);
+            int[,] expected = Utils.Add(m1, m2);
+            var sm1 = new Matrix<int>(m1);
+            var sm2 = new Matrix<int>(m2);
+            var actual = sm1.ParallelAdd(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ParallelAddFixedThreads_WhenNotSameLength_ShouldThrowArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelAdd(sm2, 2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelAdd(sm1, 2));
+        }
+
+        [TestMethod]
+        public void ParallelAddFixedThreads_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Add(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.ParallelAdd(sm2, 3);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
                 }
             }
         }
