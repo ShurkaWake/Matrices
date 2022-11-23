@@ -85,10 +85,14 @@ namespace ParPr_Lb6_Tests
             const int length = 10;
             int[,] m = Utils.GetMatrix(length);
             var sm = new Matrix<int>(m);
-            int x = RandomNumberGenerator.GetInt32(0, length);
-            int y = RandomNumberGenerator.GetInt32(0, length);
 
-            Assert.AreEqual(m[x, y], sm[x, y]);
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(m[i, j], sm[i, j]);
+                }
+            }
         }
 
         [TestMethod]

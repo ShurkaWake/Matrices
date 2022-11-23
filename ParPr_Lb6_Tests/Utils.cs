@@ -2,7 +2,7 @@
 
 namespace ParPr_Lb6_Tests
 {
-    internal class Utils
+    internal static class Utils
     {
         internal static int[,] GetMatrix(int length)
         {
@@ -12,6 +12,19 @@ namespace ParPr_Lb6_Tests
                 for (int j = 0; j < length; j++)
                 {
                     m[i, j] = RandomNumberGenerator.GetInt32(0, 1024);
+                }
+            }
+            return m;
+        }
+
+        internal static bool[,] GetBoolMatrix(int length)
+        {
+            bool[,] m = new bool[length, length];
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    m[i, j] = RandomNumberGenerator.GetInt32(0, 2) == 1;
                 }
             }
             return m;
