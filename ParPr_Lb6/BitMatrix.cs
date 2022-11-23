@@ -97,7 +97,18 @@ namespace ParPr_Lb6
 
         public BitMatrix ParallelMultiply(BitMatrix matrix, int threads)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+
+            BitMatrix result = new BitMatrix(Length);
+            Parallel.For(0, threads, (threadId) =>
+            {
+                for(int i = threadId; i < Length; i += threads)
+                {
+                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+                    result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
+                }
+            });
+            return result;
         }
 
         public BitMatrix SequentalAdd(BitMatrix matrix)
