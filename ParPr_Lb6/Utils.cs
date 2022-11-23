@@ -42,6 +42,7 @@ namespace ParPr_Lb6
         internal static void NumberMatrixAddTest()
         {
             int length = 10_000;
+            int threads = 8;
             int[,] m1 = Utils.GetMatrix(length);
             int[,] m2 = Utils.GetMatrix(length);
             var sm1 = new Matrix<int>(m1);
@@ -55,11 +56,11 @@ namespace ParPr_Lb6
             double elapsedPar = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resPar = sm1.ParallelAdd(sm2));
             double elapsedParFixed = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
-                () => resPar = sm1.ParallelAdd(sm2, 4));
+                () => resPar = sm1.ParallelAdd(sm2, threads));
 
-            Console.WriteLine($"Sequental add execution time: {elapsedSeq:F4} ms");
-            Console.WriteLine($"Parallel add execution time: {elapsedPar:F4} ms");
-            Console.WriteLine($"Parallel [threads = 4] add execution time: {elapsedParFixed:F4} ms");
+            Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} ms");
+            Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} ms");
+            Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} ms");
             Console.WriteLine(resSeq.Length);
         }
     }
