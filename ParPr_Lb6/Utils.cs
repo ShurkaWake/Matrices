@@ -46,8 +46,8 @@ namespace ParPr_Lb6
             var sm1 = new Matrix<int>(m1);
             var sm2 = new Matrix<int>(m2);
 
-            Matrix<int> resSeq = new Matrix<int>(1);
-            Matrix<int> resPar = new Matrix<int>(1);
+            IMatrix<int> resSeq = new Matrix<int>(1);
+            IMatrix<int> resPar = new Matrix<int>(1);
 
             double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resSeq = sm1.SequentalAdd(sm2));
@@ -69,8 +69,8 @@ namespace ParPr_Lb6
             var sm1 = new Matrix<int>(m1);
             var sm2 = new Matrix<int>(m2);
 
-            Matrix<int> resSeq = new Matrix<int>(1);
-            Matrix<int> resPar = new Matrix<int>(1);
+            IMatrix<int> resSeq = new Matrix<int>(1);
+            IMatrix<int> resPar = new Matrix<int>(1);
 
             double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resSeq = sm1.SequentalMultiply(sm2));

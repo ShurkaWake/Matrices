@@ -2,7 +2,7 @@
 
 namespace ParPr_Lb6
 {
-    public class Matrix<T> where T : INumber<T>
+    public class Matrix<T> : IMatrix<T> where T : INumber<T>
     {
         T[,] _values;
         readonly int _length;
@@ -46,7 +46,7 @@ namespace ParPr_Lb6
             }
         }
 
-        public Matrix<T> SequentalAdd(Matrix<T> matrix)
+        public IMatrix<T> SequentalAdd(IMatrix<T> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -61,7 +61,7 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public Matrix<T> ParallelAdd(Matrix<T> matrix)
+        public IMatrix<T> ParallelAdd(IMatrix<T> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -78,7 +78,7 @@ namespace ParPr_Lb6
         }
 
 
-        public Matrix<T> ParallelAdd(Matrix<T> matrix, int threads)
+        public IMatrix<T> ParallelAdd(IMatrix<T> matrix, int threads)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -97,7 +97,7 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public Matrix<T> SequentalMultiply(Matrix<T> matrix)
+        public IMatrix<T> SequentalMultiply(IMatrix<T> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -115,7 +115,7 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public Matrix<T> ParallelMultiply(Matrix<T> matrix)
+        public IMatrix<T> ParallelMultiply(IMatrix<T> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -133,7 +133,7 @@ namespace ParPr_Lb6
             return result;
         }
 
-        public Matrix<T> ParallelMultiply(Matrix<T> matrix, int threads)
+        public IMatrix<T> ParallelMultiply(IMatrix<T> matrix, int threads)
         {
             ThrowExceptionIfNotEqualLength(matrix);
 
@@ -172,7 +172,7 @@ namespace ParPr_Lb6
             }
         }
 
-        private void ThrowExceptionIfNotEqualLength(Matrix<T> y)
+        private void ThrowExceptionIfNotEqualLength(IMatrix<T> y)
         {
             if (Length != y.Length)
             {
