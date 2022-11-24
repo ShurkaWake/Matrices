@@ -230,12 +230,90 @@ namespace ParPr_Lb6
 
         public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            BitMatrix result = new BitMatrix(Length);
+
+            if (matrix is BitMatrix bitMatrix)
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        BitArray curr = _valuesHorizontal[i].Clone() as BitArray;
+                        curr.And(bitMatrix._valuesVertical[j]);
+
+                        bool res = false;
+                        foreach (bool elem in curr)
+                        {
+                            res ^= elem;
+                        }
+
+                        result._valuesHorizontal[i][j] = res;
+                        result._valuesVertical[j][i] = res;
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        bool sum = false;
+                        for (int r = 0; r < Length; r++)
+                        {
+                            result[i, j] |= this[i, j] & matrix[i, j];
+                        }
+                    }
+                });
+            }
+
+            return result;
         }
 
         public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix, int threads)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
+            BitMatrix result = new BitMatrix(Length);
+
+            if (matrix is BitMatrix bitMatrix)
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        BitArray curr = _valuesHorizontal[i].Clone() as BitArray;
+                        curr.And(bitMatrix._valuesVertical[j]);
+
+                        bool res = false;
+                        foreach (bool elem in curr)
+                        {
+                            res ^= elem;
+                        }
+
+                        result._valuesHorizontal[i][j] = res;
+                        result._valuesVertical[j][i] = res;
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        bool sum = false;
+                        for (int r = 0; r < Length; r++)
+                        {
+                            result[i, j] |= this[i, j] & matrix[i, j];
+                        }
+                    }
+                });
+            }
+
+            return result;
         }
 
         public object Clone()
