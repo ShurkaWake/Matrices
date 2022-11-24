@@ -1,10 +1,9 @@
 using ParPr_Lb6;
-using System.Security.Cryptography;
 
 namespace ParPr_Lb6_Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class MatrixTests
     {
         [TestMethod]
         public void Constructor_WhenLengthLessThanZero_ShouldThrowArgumentException()

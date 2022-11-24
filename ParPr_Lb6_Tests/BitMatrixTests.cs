@@ -1,10 +1,4 @@
 ﻿using ParPr_Lb6;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParPr_Lb6_Tests
 {
@@ -90,10 +84,10 @@ namespace ParPr_Lb6_Tests
             const int length = 10;
             bool[,] m = Utils.GetBoolMatrix(length);
             var sm = new BitMatrix(m);
-            
-            for(int i = 0; i < length; i++)
+
+            for (int i = 0; i < length; i++)
             {
-                for(int j = 0; j < length; j++)
+                for (int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(m[i, j], sm[i, j]);
                 }
@@ -220,6 +214,153 @@ namespace ParPr_Lb6_Tests
                 for (int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void SequentalMultiply_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.SequentalMultiply(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.SequentalMultiply(sm1));
+        }
+
+        [TestMethod]
+        public void SequentalMultiply_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.SequentalMultiply(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+
+        [TestMethod]
+        public void ParallelMultiply_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelMultiply(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelMultiply(sm1));
+        }
+
+        [TestMethod]
+        public void ParallelMultiply_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.ParallelMultiply(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ParallelMultiplyFixedThreads_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelMultiply(sm2, 3));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelMultiply(sm1, 3));
+        }
+
+        [TestMethod]
+        public void ParallelMultiplyFixedThreads_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.ParallelMultiply(sm2, 3);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void MyTest()
+        {
+            bool[,] a = new bool[,]
+            {
+                { true, false, true },
+                { false, true, true },
+                { true, false, false },
+            };
+
+            bool[,] b = new bool[,]
+            {
+                { false, true, true },
+                { true, false, false },
+                { false, false, false },
+            };
+
+            bool[,] exp = new bool[,]
+            {
+                { false, true, true },
+                { true, false, false },
+                { false, true, true },
+            };
+
+            bool[,] act = Utils.Multiply(a, b);
+            var matr = (new BitMatrix(a)).SequentalMultiply(new BitMatrix(b));
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Assert.AreEqual(exp[i, j], act[i, j]);
                 }
             }
         }

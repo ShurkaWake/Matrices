@@ -80,5 +80,24 @@ namespace ParPr_Lb6_Tests
 
             return res;
         }
+
+        internal static bool[,] Multiply(bool[,] first, bool[,] second)
+        {
+            int length = first.GetLength(0);
+            bool[,] res = new bool[length, length];
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    for (int k = 0; k < length; k++)
+                    {
+                        res[i, j] ^= first[i, k] & second[k, j];
+                    }
+                }
+            }
+
+            return res;
+        }
     }
 }
