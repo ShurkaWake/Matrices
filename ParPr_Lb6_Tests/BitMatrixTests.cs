@@ -90,10 +90,10 @@ namespace ParPr_Lb6_Tests
             const int length = 10;
             bool[,] m = Utils.GetBoolMatrix(length);
             var sm = new BitMatrix(m);
-            
-            for(int i = 0; i < length; i++)
+
+            for (int i = 0; i < length; i++)
             {
-                for(int j = 0; j < length; j++)
+                for (int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(m[i, j], sm[i, j]);
                 }
@@ -332,6 +332,41 @@ namespace ParPr_Lb6_Tests
                 for (int j = 0; j < length; j++)
                 {
                     Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void MyTest()
+        {
+            bool[,] a = new bool[,]
+            {
+                { true, false, true },
+                { false, true, true },
+                { true, false, false },
+            };
+
+            bool[,] b = new bool[,]
+            {
+                { false, true, true },
+                { true, false, false },
+                { false, false, false },
+            };
+
+            bool[,] exp = new bool[,]
+            {
+                { false, true, true },
+                { true, false, false },
+                { false, true, true },
+            };
+
+            bool[,] act = Utils.Multiply(a, b);
+            var matr = (new BitMatrix(a)).SequentalMultiply(new BitMatrix(b));
+            for(int i = 0; i < 3; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    Assert.AreEqual(exp[i, j], act[i, j]);
                 }
             }
         }
