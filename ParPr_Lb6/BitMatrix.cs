@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ParPr_Lb6
 {
-    public class BitMatrix
+    public class BitMatrix : IMatrix<bool>
     {
         private readonly BitArray[] _valuesVertical;
         private readonly BitArray[] _valuesHorizontal;
@@ -73,47 +73,6 @@ namespace ParPr_Lb6
 
         public int Length => _length;
 
-        public BitMatrix SequentalAdd(BitMatrix matrix)
-        {
-            ThrowExceptionIfNotEqualLength(matrix);
-
-            BitMatrix result = new BitMatrix(Length);
-            for (int i = 0; i < Length; i++)
-            {
-                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-            }
-            return result;
-        }
-
-        public BitMatrix ParallelAdd(BitMatrix matrix)
-        {
-            ThrowExceptionIfNotEqualLength(matrix);
-
-            BitMatrix result = new BitMatrix(Length);
-            Parallel.For(0, Length, (i) =>
-            {
-                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-            });
-            return result;
-        }
-
-        public BitMatrix ParallelAdd(BitMatrix matrix, int threads)
-        {
-            ThrowExceptionIfNotEqualLength(matrix);
-            ParallelOptions parallelOptions = new ParallelOptions();
-            parallelOptions.MaxDegreeOfParallelism = threads;
-
-            BitMatrix result = new BitMatrix(Length);
-            Parallel.For(0, Length, parallelOptions, (i) =>
-            {
-                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-            });
-            return result;
-        }
-
         public BitMatrix SequentalMultiply(BitMatrix matrix)
         {
             throw new NotImplementedException();
@@ -147,12 +106,113 @@ namespace ParPr_Lb6
             }
         }
 
-        private void ThrowExceptionIfNotEqualLength(BitMatrix y)
+        private void ThrowExceptionIfNotEqualLength(IMatrix<bool> y)
         {
             if (Length != y.Length)
             {
                 throw new ArgumentException("Matrices must be the same length");
             }
+        }
+
+        public IMatrix<bool> SequentalAdd(IMatrix<bool> matrix)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+            BitMatrix result = new BitMatrix(Length);
+
+            if (matrix is BitMatrix bitMatrix)
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
+                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                    }
+                }
+            }
+            
+            return result;
+        }
+
+        public IMatrix<bool> ParallelAdd(IMatrix<bool> matrix)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+            BitMatrix result = new BitMatrix(Length);
+
+            if(matrix is BitMatrix bitMatrix)
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
+                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                    }
+                });
+            }
+            
+            return result;
+        }
+
+        public IMatrix<bool> ParallelAdd(IMatrix<bool> matrix, int threads)
+        {
+            ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
+            BitMatrix result = new BitMatrix(Length);
+
+            if(matrix is BitMatrix bitMatrix)
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
+                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                    }
+                });
+            }
+            
+            return result;
+        }
+
+        public IMatrix<bool> SequentalMultiply(IMatrix<bool> matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix, int threads)
+        {
+            throw new NotImplementedException();
         }
     }
 }

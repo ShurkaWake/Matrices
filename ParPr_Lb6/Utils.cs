@@ -92,8 +92,8 @@ namespace ParPr_Lb6
             var sm1 = new BitMatrix(GetBoolMatrix(length));
             var sm2 = new BitMatrix(GetBoolMatrix(length));
 
-            BitMatrix resSeq = new BitMatrix(1);
-            BitMatrix resPar = new BitMatrix(1);
+            IMatrix<bool> resSeq = new BitMatrix(1);
+            IMatrix<bool> resPar = new BitMatrix(1);
 
             double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resSeq = sm1.SequentalAdd(sm2));
