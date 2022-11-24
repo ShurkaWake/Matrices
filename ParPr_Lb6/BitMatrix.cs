@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace ParPr_Lb6
 {
-    public class BitMatrix : IMatrix<bool>
+    public class BitMatrix : IMatrix<bool>, ICloneable
     {
-        private readonly BitArray[] _valuesVertical;
-        private readonly BitArray[] _valuesHorizontal;
-        private readonly int _length;
+        private BitArray[] _valuesVertical;
+        private BitArray[] _valuesHorizontal;
+        private int _length;
 
         public BitMatrix(int n)
         {
@@ -73,21 +73,6 @@ namespace ParPr_Lb6
 
         public int Length => _length;
 
-        public BitMatrix SequentalMultiply(BitMatrix matrix)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BitMatrix ParallelMultiply(BitMatrix matrix)
-        {
-            throw new NotImplementedException();
-        }
-
-        public BitMatrix ParallelMultiply(BitMatrix matrix, int threads)
-        {
-            throw new NotImplementedException();
-        }
-
         private bool IsInBounds(int index)
         {
             return index >= 0 && index < _length;
@@ -117,14 +102,14 @@ namespace ParPr_Lb6
         public IMatrix<bool> SequentalAdd(IMatrix<bool> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
-            BitMatrix result = new BitMatrix(Length);
+            BitMatrix result = this.Clone() as BitMatrix; 
 
             if (matrix is BitMatrix bitMatrix)
             {
                 for (int i = 0; i < Length; i++)
                 {
-                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
-                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                    result._valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
                 }
             }
             else
@@ -133,8 +118,8 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
-                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                        result._valuesHorizontal[i][j] |= matrix[i, j];
+                        result._valuesVertical[j][i] |= matrix[i, j];
                     }
                 }
             }
@@ -145,14 +130,14 @@ namespace ParPr_Lb6
         public IMatrix<bool> ParallelAdd(IMatrix<bool> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
-            BitMatrix result = new BitMatrix(Length);
+            BitMatrix result = this.Clone() as BitMatrix;
 
             if(matrix is BitMatrix bitMatrix)
             {
                 Parallel.For(0, Length, (i) =>
                 {
-                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
-                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                    result._valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
                 });
             }
             else
@@ -161,8 +146,8 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
-                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                        result._valuesHorizontal[i][j] |= matrix[i, j];
+                        result._valuesVertical[j][i] |= matrix[i, j];
                     }
                 });
             }
@@ -175,14 +160,14 @@ namespace ParPr_Lb6
             ThrowExceptionIfNotEqualLength(matrix);
             ParallelOptions parallelOptions = new ParallelOptions();
             parallelOptions.MaxDegreeOfParallelism = threads;
-            BitMatrix result = new BitMatrix(Length);
+            BitMatrix result = this.Clone() as BitMatrix;
 
-            if(matrix is BitMatrix bitMatrix)
+            if (matrix is BitMatrix bitMatrix)
             {
                 Parallel.For(0, Length, parallelOptions, (i) =>
                 {
-                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
-                    result._valuesVertical[i] = _valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
+                    result._valuesHorizontal[i].Or(bitMatrix._valuesHorizontal[i]);
+                    result._valuesVertical[i].Or(bitMatrix._valuesVertical[i]);
                 });
             }
             else
@@ -191,8 +176,8 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._valuesHorizontal[i][j] = _valuesHorizontal[i][j] & matrix[i, j];
-                        result._valuesVertical[j][i] = _valuesVertical[j][i] & matrix[i, j];
+                        result._valuesHorizontal[i][j] |= matrix[i, j];
+                        result._valuesVertical[j][i] |= matrix[i, j];
                     }
                 });
             }
@@ -202,7 +187,41 @@ namespace ParPr_Lb6
 
         public IMatrix<bool> SequentalMultiply(IMatrix<bool> matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            BitMatrix result = this.Clone() as BitMatrix;
+
+            if (matrix is BitMatrix bitMatrix)
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    BitArray currHor = new BitArray(Length);
+                    BitArray currVer = new BitArray(Length);
+                    BitMatrix temp = bitMatrix.Clone() as BitMatrix;
+                    for (int j = 0; j < Length; j++)
+                    {
+                        currHor.Or(temp._valuesHorizontal[j].And(_valuesHorizontal[i]));
+                        currVer.Or(temp._valuesVertical[j].And(_valuesVertical[i]));
+                    }
+                    result._valuesVertical[i] = currVer;
+                    result._valuesHorizontal[i] = currHor;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        bool sum = false;
+                        for (int r = 0; r < Length; r++)
+                        {
+                            result[i, j] |= this[i, j] & matrix[i, j];
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix)
@@ -213,6 +232,15 @@ namespace ParPr_Lb6
         public IMatrix<bool> ParallelMultiply(IMatrix<bool> matrix, int threads)
         {
             throw new NotImplementedException();
+        }
+
+        public object Clone()
+        {
+            var result = new BitMatrix(Length);
+            result._valuesHorizontal = _valuesHorizontal.Clone() as BitArray[];
+            result._valuesVertical = _valuesVertical.Clone() as BitArray[];
+            result._length = _length;
+            return result;
         }
     }
 }
