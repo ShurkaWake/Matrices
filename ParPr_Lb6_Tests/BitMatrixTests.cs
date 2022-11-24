@@ -260,5 +260,80 @@ namespace ParPr_Lb6_Tests
                 }
             }
         }
+
+
+        [TestMethod]
+        public void ParallelMultiply_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelMultiply(sm2));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelMultiply(sm1));
+        }
+
+        [TestMethod]
+        public void ParallelMultiply_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.ParallelMultiply(sm2);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ParallelMultiplyFixedThreads_WhenNotSameMatrixLength_ThrowsArgumentException()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length - 1);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+
+            Assert.ThrowsException<ArgumentException>(() => sm1.ParallelMultiply(sm2, 3));
+            Assert.ThrowsException<ArgumentException>(() => sm2.ParallelMultiply(sm1, 3));
+        }
+
+        [TestMethod]
+        public void ParallelMultiplyFixedThreads_WhenCorrectParameter_ShouldGiveCorrectResult()
+        {
+            const int length = 10;
+            bool[,] m1 = Utils.GetBoolMatrix(length);
+            bool[,] m2 = Utils.GetBoolMatrix(length);
+            bool[,] expected = Utils.Multiply(m1, m2);
+            var sm1 = new BitMatrix(m1);
+            var sm2 = new BitMatrix(m2);
+            var actual = sm1.ParallelMultiply(sm2, 3);
+
+            Assert.AreEqual(sm1.Length, actual.Length);
+            Assert.AreEqual(sm2.Length, actual.Length);
+            Assert.AreEqual(actual.Length, length);
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    Assert.AreEqual(expected[i, j], actual[i, j]);
+                }
+            }
+        }
     }
 }
