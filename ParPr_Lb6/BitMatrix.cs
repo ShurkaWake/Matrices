@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace ParPr_Lb6
 {
     public class BitMatrix : IMatrix<bool>, ICloneable
     {
-        private BitArray[] _values;
-        private int _length;
+        private readonly BitArray[] _values;
+        private readonly int _length;
 
         public BitMatrix(int n)
         {
@@ -22,7 +16,7 @@ namespace ParPr_Lb6
             _values = new BitArray[n];
             for (int i = 0; i < n; i++)
             {
-                _values[i] = new BitArray(n);
+                Values[i] = new BitArray(n);
             }
             _length = n;
         }
@@ -34,36 +28,44 @@ namespace ParPr_Lb6
                 throw new ArgumentException("Matrix must have same dimensions");
             }
 
-            int n = values.GetLength(0); 
+            int n = values.GetLength(0);
             _values = new BitArray[n];
 
             for (int i = 0; i < n; i++)
             {
-                _values[i] = new BitArray(n);
+                Values[i] = new BitArray(n);
 
                 for (int j = 0; j < n; j++)
                 {
-                    _values[i][j] = values[i, j];
+                    Values[i][j] = values[i, j];
                 }
             }
             _length = n;
         }
 
-        public bool this[int x, int y] 
+        private BitMatrix(BitArray[] values, int length)
+        {
+            _values = values;
+            _length = length;
+        }
+
+        public bool this[int x, int y]
         {
             get
             {
                 ThrowExceptionIfNotInBounds(x, y);
-                return _values[x][y];
+                return Values[x][y];
             }
             set
             {
                 ThrowExceptionIfNotInBounds(x, y);
-                _values[x][y] = value;
-            } 
+                Values[x][y] = value;
+            }
         }
 
         public int Length => _length;
+
+        public BitArray[] Values => _values;
 
         private bool IsInBounds(int index)
         {
@@ -94,13 +96,13 @@ namespace ParPr_Lb6
         public IMatrix<bool> SequentalAdd(IMatrix<bool> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
-            BitMatrix result = this.Clone() as BitMatrix; 
+            BitMatrix result = this.Clone() as BitMatrix;
 
             if (matrix is BitMatrix bitMatrix)
             {
                 for (int i = 0; i < Length; i++)
                 {
-                    result._values[i].Or(bitMatrix._values[i]);
+                    result.Values[i].Or(bitMatrix.Values[i]);
                 }
             }
             else
@@ -109,11 +111,11 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._values[i][j] |= matrix[i, j];
+                        result.Values[i][j] |= matrix[i, j];
                     }
                 }
             }
-            
+
             return result;
         }
 
@@ -122,11 +124,11 @@ namespace ParPr_Lb6
             ThrowExceptionIfNotEqualLength(matrix);
             BitMatrix result = this.Clone() as BitMatrix;
 
-            if(matrix is BitMatrix bitMatrix)
+            if (matrix is BitMatrix bitMatrix)
             {
                 Parallel.For(0, Length, (i) =>
                 {
-                    result._values[i].Or(bitMatrix._values[i]);
+                    result.Values[i].Or(bitMatrix.Values[i]);
                 });
             }
             else
@@ -135,11 +137,11 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._values[i][j] |= matrix[i, j];
+                        result.Values[i][j] |= matrix[i, j];
                     }
                 });
             }
-            
+
             return result;
         }
 
@@ -154,7 +156,7 @@ namespace ParPr_Lb6
             {
                 Parallel.For(0, Length, parallelOptions, (i) =>
                 {
-                    result._values[i].Or(bitMatrix._values[i]);
+                    result.Values[i].Or(bitMatrix.Values[i]);
                 });
             }
             else
@@ -163,11 +165,11 @@ namespace ParPr_Lb6
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result._values[i][j] |= matrix[i, j];
+                        result.Values[i][j] |= matrix[i, j];
                     }
                 });
             }
-            
+
             return result;
         }
 
@@ -183,12 +185,12 @@ namespace ParPr_Lb6
                     BitArray resRow = new BitArray(Length, false);
                     for (int j = 0; j < Length; j++)
                     {
-                        BitArray bit = new BitArray(bitMatrix._values[j]);
+                        BitArray bit = new BitArray(bitMatrix.Values[j]);
                         BitArray curr = new BitArray(Length, this[i, j]);
                         curr.And(bit);
                         resRow.Xor(curr);
                     }
-                    result._values[i] = resRow;
+                    result.Values[i] = resRow;
                 }
             }
             else
@@ -221,12 +223,12 @@ namespace ParPr_Lb6
                     BitArray resRow = new BitArray(Length, false);
                     for (int j = 0; j < Length; j++)
                     {
-                        BitArray bit = new BitArray(bitMatrix._values[j]);
+                        BitArray bit = new BitArray(bitMatrix.Values[j]);
                         BitArray curr = new BitArray(Length, this[i, j]);
                         curr.And(bit);
                         resRow.Xor(curr);
                     }
-                    result._values[i] = resRow;
+                    result.Values[i] = resRow;
                 });
             }
             else
@@ -261,12 +263,12 @@ namespace ParPr_Lb6
                     BitArray resRow = new BitArray(Length, false);
                     for (int j = 0; j < Length; j++)
                     {
-                        BitArray bit = new BitArray(bitMatrix._values[j]);
+                        BitArray bit = new BitArray(bitMatrix.Values[j]);
                         BitArray curr = new BitArray(Length, this[i, j]);
                         curr.And(bit);
                         resRow.Xor(curr);
                     }
-                    result._values[i] = resRow;
+                    result.Values[i] = resRow;
                 });
             }
             else
@@ -289,10 +291,8 @@ namespace ParPr_Lb6
 
         public object Clone()
         {
-            var result = new BitMatrix(Length);
-            result._values = _values.Clone() as BitArray[];
-            result._length = _length;
-            return result;
+            var newValues = Values.Clone() as BitArray[];
+            return new BitMatrix(newValues, Length);
         }
     }
 }

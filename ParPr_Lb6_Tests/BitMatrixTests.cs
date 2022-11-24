@@ -1,10 +1,4 @@
 ﻿using ParPr_Lb6;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParPr_Lb6_Tests
 {
@@ -362,9 +356,9 @@ namespace ParPr_Lb6_Tests
 
             bool[,] act = Utils.Multiply(a, b);
             var matr = (new BitMatrix(a)).SequentalMultiply(new BitMatrix(b));
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
-                for(int j = 0; j < 3; j++)
+                for (int j = 0; j < 3; j++)
                 {
                     Assert.AreEqual(exp[i, j], act[i, j]);
                 }

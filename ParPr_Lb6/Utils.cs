@@ -29,13 +29,13 @@ namespace ParPr_Lb6
             switch (format)
             {
                 case TimeFormat.Miliseconds:
-                    return ticks / (double) TimeSpan.TicksPerMillisecond;
+                    return ticks / (double)TimeSpan.TicksPerMillisecond;
                 case TimeFormat.Seconds:
-                    return ticks / (double) TimeSpan.TicksPerSecond;
+                    return ticks / (double)TimeSpan.TicksPerSecond;
                 case TimeFormat.Ticks:
                     return ticks;
                 default:
-                    return ticks / (double) TimeSpan.TicksPerMicrosecond;
+                    return ticks / (double)TimeSpan.TicksPerMicrosecond;
             }
         }
 

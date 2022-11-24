@@ -1,5 +1,4 @@
 using ParPr_Lb6;
-using System.Security.Cryptography;
 
 namespace ParPr_Lb6_Tests
 {
