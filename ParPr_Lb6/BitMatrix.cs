@@ -188,22 +188,26 @@ namespace ParPr_Lb6
         public IMatrix<bool> SequentalMultiply(IMatrix<bool> matrix)
         {
             ThrowExceptionIfNotEqualLength(matrix);
-            BitMatrix result = this.Clone() as BitMatrix;
+            BitMatrix result = new BitMatrix(Length);
 
             if (matrix is BitMatrix bitMatrix)
             {
                 for (int i = 0; i < Length; i++)
                 {
-                    BitArray currHor = new BitArray(Length);
-                    BitArray currVer = new BitArray(Length);
-                    BitMatrix temp = bitMatrix.Clone() as BitMatrix;
                     for (int j = 0; j < Length; j++)
                     {
-                        currHor.Or(temp._valuesHorizontal[j].And(_valuesHorizontal[i]));
-                        currVer.Or(temp._valuesVertical[j].And(_valuesVertical[i]));
+                        BitArray curr = _valuesHorizontal[i].Clone() as BitArray;
+                        curr.And(bitMatrix._valuesVertical[j]);
+
+                        bool res = false;
+                        foreach (bool elem in curr)
+                        {
+                            res ^= elem;
+                        }
+
+                        result._valuesHorizontal[i][j] = res;
+                        result._valuesVertical[j][i] = res;
                     }
-                    result._valuesVertical[i] = currVer;
-                    result._valuesHorizontal[i] = currHor;
                 }
             }
             else
