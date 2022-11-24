@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ParPr_Lb6
@@ -101,15 +102,14 @@ namespace ParPr_Lb6
         public BitMatrix ParallelAdd(BitMatrix matrix, int threads)
         {
             ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
 
             BitMatrix result = new BitMatrix(Length);
-            Parallel.For(0, threads, (threadId) =>
+            Parallel.For(0, Length, parallelOptions, (i) =>
             {
-                for (int i = threadId; i < Length; i += threads)
-                {
-                    result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
-                    result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
-                }
+                result._valuesHorizontal[i] = _valuesHorizontal[i].Or(matrix._valuesHorizontal[i]);
+                result._valuesVertical[i] = _valuesVertical[i].Or(matrix._valuesVertical[i]);
             });
             return result;
         }

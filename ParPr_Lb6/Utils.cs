@@ -44,9 +44,10 @@ namespace ParPr_Lb6
             bool[,] m = new bool[length, length];
             for (int i = 0; i < length; i++)
             {
+                bool curr = (System.Diagnostics.Stopwatch.GetTimestamp() & 1) == 1;
                 for (int j = 0; j < length; j++)
                 {
-                    m[i, j] = (System.Diagnostics.Stopwatch.GetTimestamp() & 1) == 1;
+                    m[i, j] = curr;
                 }
             }
             return m;
@@ -54,6 +55,10 @@ namespace ParPr_Lb6
 
         internal static void NumberMatrixAddTest(int length, int threads)
         {
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~ Bool Matrix Add ~#~#~#~#~#~");
+            Console.WriteLine();
+
             int[,] m1 = Utils.GetMatrix(length);
             int[,] m2 = Utils.GetMatrix(length);
             var sm1 = new Matrix<int>(m1);
@@ -72,30 +77,46 @@ namespace ParPr_Lb6
             Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} ms");
             Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} ms");
             Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} ms");
+
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~");
+            Console.WriteLine();
         }
 
         internal static void BoolMatrixAddTest(int length, int threads)
         {
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~ Bool Matrix Add ~#~#~#~#~#~");
+            Console.WriteLine();
+
             var sm1 = new BitMatrix(GetBoolMatrix(length));
             var sm2 = new BitMatrix(GetBoolMatrix(length));
 
             BitMatrix resSeq = new BitMatrix(1);
             BitMatrix resPar = new BitMatrix(1);
 
-            double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+            double elapsedSeq = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resSeq = sm1.SequentalAdd(sm2));
-            double elapsedPar = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+            double elapsedPar = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resPar = sm1.ParallelAdd(sm2));
-            double elapsedParFixed = Utils.GetExecutionTakenTime(TimeFormat.Microseconds,
+            double elapsedParFixed = Utils.GetExecutionTakenTime(TimeFormat.Miliseconds,
                 () => resPar = sm1.ParallelAdd(sm2, threads));
 
-            Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} mcs");
-            Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} mcs");
-            Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} mcs");
+            Console.WriteLine($"Sequental add [length = {length}] execution time: {elapsedSeq:F4} ms");
+            Console.WriteLine($"Parallel add [length = {length}] execution time: {elapsedPar:F4} ms");
+            Console.WriteLine($"Parallel [threads = {threads}] add [length = {length}] execution time: {elapsedParFixed:F4} ms");
+
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~");
+            Console.WriteLine();
         }
 
         internal static void NumberMatrixMultiplyTest(int length, int threads)
         {
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~ Number Matrix Add ~#~#~#~#~#~");
+            Console.WriteLine();
+
             int[,] m1 = Utils.GetMatrix(length);
             int[,] m2 = Utils.GetMatrix(length);
             var sm1 = new Matrix<int>(m1);
@@ -114,6 +135,10 @@ namespace ParPr_Lb6
             Console.WriteLine($"Sequental multiply [length = {length}] execution time: {elapsedSeq:F4} ms");
             Console.WriteLine($"Parallel multiply [length = {length}] execution time: {elapsedPar:F4} ms");
             Console.WriteLine($"Parallel [threads = {threads}] multiply [length = {length}] execution time: {elapsedParFixed:F4} ms");
+
+            Console.WriteLine();
+            Console.WriteLine("~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~");
+            Console.WriteLine();
         }
     }
 

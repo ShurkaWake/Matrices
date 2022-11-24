@@ -81,16 +81,15 @@ namespace ParPr_Lb6
         public IMatrix<T> ParallelAdd(IMatrix<T> matrix, int threads)
         {
             ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
 
             Matrix<T> result = new Matrix<T>(Length);
-            Parallel.For(0, threads, (threadId) =>
+            Parallel.For(0, Length, parallelOptions, (i) =>
             {
-                for (int i = threadId; i < Length; i += threads)
+                for (int j = 0; j < Length; j++)
                 {
-                    for (int j = 0; j < Length; j++)
-                    {
-                        result[i, j] = this[i, j] + matrix[i, j];
-                    }
+                    result[i, j] = this[i, j] + matrix[i, j];
                 }
             });
 
@@ -137,18 +136,17 @@ namespace ParPr_Lb6
         public IMatrix<T> ParallelMultiply(IMatrix<T> matrix, int threads)
         {
             ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
 
             Matrix<T> result = new Matrix<T>(Length);
-            Parallel.For(0, threads, (threadId) =>
+            Parallel.For(0, Length, parallelOptions, (i) =>
             {
-                for (int i = threadId; i < Length; i += threads)
+                for (int j = 0; j < Length; j++)
                 {
-                    for (int j = 0; j < Length; j++)
+                    for (int k = 0; k < Length; k++)
                     {
-                        for (int k = 0; k < Length; k++)
-                        {
-                            result[i, j] += this[i, k] * matrix[k, j];
-                        }
+                        result[i, j] += this[i, k] * matrix[k, j];
                     }
                 }
             });
