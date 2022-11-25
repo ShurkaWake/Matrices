@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Threading;
 
 namespace ShurkaWake.Matrices
 {
@@ -112,32 +113,179 @@ namespace ShurkaWake.Matrices
 
         public IMatrix<T> ParallelAdd(IMatrix<T> matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            Matrix<T> result = new Matrix<T>(Length);
 
+            if (matrix is Matrix<T> second)
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Values.GetLength(1); j++)
+                    {
+                        result.Values[i, j] = Values[i, j] + second.Values[i, j];
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        result[i, j] = this[i, j] + matrix[i, j];
+                    }
+                });
+            }
+
+            return result;
         }
 
 
         public IMatrix<T> ParallelAdd(IMatrix<T> matrix, int threads)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
+            Matrix<T> result = new Matrix<T>(Length);
 
+            if (matrix is Matrix<T> second)
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Values.GetLength(1); j++)
+                    {
+                        result.Values[i, j] = Values[i, j] + second.Values[i, j];
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        result[i, j] = this[i, j] + matrix[i, j];
+                    }
+                });
+            }
+
+            return result;
         }
 
         public IMatrix<T> SequentalMultiply(IMatrix<T> matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            Matrix<T> result = new Matrix<T>(Length);
 
+            if (matrix is Matrix<T> second)
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        T[] temp = new T[chunkSize];
+                        Array.Fill(temp, this[i, j]);
+                        var curr = new Vector<T>(temp);
+                        for (int k = 0; k < Values.GetLength(1); k++)
+                        {
+                            result._values[i, k] += curr * second.Values[j, k];
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Length; i++)
+                {
+                    for (int k = 0; k < Length; k++)
+                    {
+                        for (int j = 0; j < Length; j++)
+                        {
+                            result[i, j] += this[i, k] * matrix[k, j];
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         public IMatrix<T> ParallelMultiply(IMatrix<T> matrix)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            Matrix<T> result = new Matrix<T>(Length);
 
+            if (matrix is Matrix<T> second)
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        T[] temp = new T[chunkSize];
+                        Array.Fill(temp, this[i, j]);
+                        var curr = new Vector<T>(temp);
+                        for (int k = 0; k < Values.GetLength(1); k++)
+                        {
+                            result._values[i, k] += curr * second.Values[j, k];
+                        }
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, (i) =>
+                {
+                    for (int k = 0; k < Length; k++)
+                    {
+                        for (int j = 0; j < Length; j++)
+                        {
+                            result[i, j] += this[i, k] * matrix[k, j];
+                        }
+                    }
+                });
+            }
+
+            return result;
         }
 
         public IMatrix<T> ParallelMultiply(IMatrix<T> matrix, int threads)
         {
-            throw new NotImplementedException();
+            ThrowExceptionIfNotEqualLength(matrix);
+            ParallelOptions parallelOptions = new ParallelOptions();
+            parallelOptions.MaxDegreeOfParallelism = threads;
+            Matrix<T> result = new Matrix<T>(Length);
+
+            if (matrix is Matrix<T> second)
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int j = 0; j < Length; j++)
+                    {
+                        T[] temp = new T[chunkSize];
+                        Array.Fill(temp, this[i, j]);
+                        var curr = new Vector<T>(temp);
+                        for (int k = 0; k < Values.GetLength(1); k++)
+                        {
+                            result._values[i, k] += curr * second.Values[j, k];
+                        }
+                    }
+                });
+            }
+            else
+            {
+                Parallel.For(0, Length, parallelOptions, (i) =>
+                {
+                    for (int k = 0; k < Length; k++)
+                    {
+                        for (int j = 0; j < Length; j++)
+                        {
+                            result[i, j] += this[i, k] * matrix[k, j];
+                        }
+                    }
+                });
+            }
+
+            return result;
         }
 
         private bool IsInBounds(int index)
