@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ParPr_Lb6\ParPr_Lb6.csproj" />
+    <ProjectReference Include="..\ShurkaWake.Matrices\ShurkaWake.Matrices.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace ParPr_Lb6_Tests
+namespace ShurkaWake.Matrices.Tests
 {
     internal static class Utils
     {

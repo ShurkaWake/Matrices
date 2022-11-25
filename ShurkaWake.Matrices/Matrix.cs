@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace ParPr_Lb6
+namespace ShurkaWake.Matrices
 {
     public class Matrix<T> : IMatrix<T> where T : INumber<T>
     {

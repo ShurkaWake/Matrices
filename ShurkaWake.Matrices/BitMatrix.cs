@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace ParPr_Lb6
+namespace ShurkaWake.Matrices
 {
     public class BitMatrix : IMatrix<bool>, ICloneable
     {

@@ -1,4 +1,4 @@
-﻿namespace ParPr_Lb6
+﻿namespace ShurkaWake.Matrices
 {
     public interface IMatrix<T>
     {

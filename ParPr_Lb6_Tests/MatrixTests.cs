@@ -1,6 +1,6 @@
-using ParPr_Lb6;
+using ShurkaWake.Matrices;
 
-namespace ParPr_Lb6_Tests
+namespace ShurkaWake.Matrices.Tests
 {
     [TestClass]
     public class MatrixTests
