@@ -5,9 +5,9 @@ VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ParPr_Lb6", "ParPr_Lb6\ParPr_Lb6.csproj", "{4856C1E0-7535-4DE4-B819-3F48DF3A76CA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShurkaWake.Matrices.Tests", "ParPr_Lb6_Tests\ShurkaWake.Matrices.Tests.csproj", "{1FF2AB27-BA4A-4EA1-9D17-1D4A2A81A141}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShurkaWake.Matrices", "ShurkaWake.Matrices\ShurkaWake.Matrices.csproj", "{FA7A5474-4FE2-43F1-8233-E1F74816572F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShurkaWake.Matrices", "ShurkaWake.Matrices\ShurkaWake.Matrices.csproj", "{FA7A5474-4FE2-43F1-8233-E1F74816572F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShurkaWake.Matrices.Tests", "ShurkaWake.Matrices.Tests\ShurkaWake.Matrices.Tests.csproj", "{3B7A6DF2-1B67-48C0-89EF-E904417233D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{4856C1E0-7535-4DE4-B819-3F48DF3A76CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4856C1E0-7535-4DE4-B819-3F48DF3A76CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4856C1E0-7535-4DE4-B819-3F48DF3A76CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FF2AB27-BA4A-4EA1-9D17-1D4A2A81A141}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FF2AB27-BA4A-4EA1-9D17-1D4A2A81A141}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FF2AB27-BA4A-4EA1-9D17-1D4A2A81A141}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FF2AB27-BA4A-4EA1-9D17-1D4A2A81A141}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA7A5474-4FE2-43F1-8233-E1F74816572F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FA7A5474-4FE2-43F1-8233-E1F74816572F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA7A5474-4FE2-43F1-8233-E1F74816572F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA7A5474-4FE2-43F1-8233-E1F74816572F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B7A6DF2-1B67-48C0-89EF-E904417233D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B7A6DF2-1B67-48C0-89EF-E904417233D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B7A6DF2-1B67-48C0-89EF-E904417233D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B7A6DF2-1B67-48C0-89EF-E904417233D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
