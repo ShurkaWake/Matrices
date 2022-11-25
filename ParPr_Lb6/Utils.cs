@@ -9,12 +9,11 @@ namespace ParPr_Lb6
         internal static int[,] GetMatrix(int length)
         {
             int[,] m = new int[length, length];
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < 10_000_000; i++)
             {
-                for (int j = 0; j < length; j++)
-                {
-                    m[i, j] = RandomNumberGenerator.GetInt32(0, 10);
-                }
+                int x = RandomNumberGenerator.GetInt32(0, length);
+                int y = RandomNumberGenerator.GetInt32(0, length);
+                m[x, y] = i;
             }
             return m;
         }
@@ -43,13 +42,11 @@ namespace ParPr_Lb6
         internal static bool[,] GetBoolMatrix(int length)
         {
             bool[,] m = new bool[length, length];
-            Parallel.For(0, length, (i) =>
+            Parallel.For(0, 10_000_000, (i) =>
             {
-                bool curr = (System.Diagnostics.Stopwatch.GetTimestamp() & 1) == 1;
-                for (int j = 0; j < length; j++)
-                {
-                    m[i, j] = curr;
-                }
+                int x = RandomNumberGenerator.GetInt32(0, length);
+                int y = RandomNumberGenerator.GetInt32(0, length);
+                m[x, y] = i % 2 == 1;
             });
             return m;
         }
