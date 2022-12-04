@@ -102,7 +102,7 @@ namespace ShurkaWake.Matrices
             {
                 for (int i = 0; i < Length; i++)
                 {
-                    result.Values[i].Or(bitMatrix.Values[i]);
+                    result.Values[i].Xor(bitMatrix.Values[i]);
                 }
             }
             else
@@ -128,7 +128,7 @@ namespace ShurkaWake.Matrices
             {
                 Parallel.For(0, Length, (i) =>
                 {
-                    result.Values[i].Or(bitMatrix.Values[i]);
+                    result.Values[i].Xor(bitMatrix.Values[i]);
                 });
             }
             else
@@ -137,7 +137,7 @@ namespace ShurkaWake.Matrices
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result.Values[i][j] |= matrix[i, j];
+                        result.Values[i][j] ^= matrix[i, j];
                     }
                 });
             }
@@ -156,7 +156,7 @@ namespace ShurkaWake.Matrices
             {
                 Parallel.For(0, Length, parallelOptions, (i) =>
                 {
-                    result.Values[i].Or(bitMatrix.Values[i]);
+                    result.Values[i].Xor(bitMatrix.Values[i]);
                 });
             }
             else
@@ -165,7 +165,7 @@ namespace ShurkaWake.Matrices
                 {
                     for (int j = 0; j < Length; j++)
                     {
-                        result.Values[i][j] |= matrix[i, j];
+                        result.Values[i][j] ^= matrix[i, j];
                     }
                 });
             }

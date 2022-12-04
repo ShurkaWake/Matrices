@@ -55,7 +55,7 @@ namespace ShurkaWake.Matrices.Tests
             {
                 for (int j = 0; j < length; j++)
                 {
-                    res[i, j] = first[i, j] | second[i, j];
+                    res[i, j] = first[i, j] ^ second[i, j];
                 }
             }
 
